@@ -1,22 +1,24 @@
 use std::fs;
 
-fn read_file() -> String {
-    fs::read_to_string("input").expect("Error reading the file")
+fn read_file() -> Vec<u32> {
+    let input = fs::read_to_string("input").unwrap();
+    input.lines().map(|x| x.parse().unwrap()).collect()
+}
+
+fn first_solution(numbers: &[u32]) -> u64 {
+    numbers.windows(2).filter(|x| x[1] > x[0]).count() as u64
+}
+
+fn second_solution(numbers: &[u32]) -> u64 {
+    numbers.windows(4).filter(|x| x[3] > x[0]).count() as u64
 }
 
 fn main() {
-    let input = read_file();
-    let lines: Vec<&str> = input.split('\n').collect();
-    let mut previous_value: u64 = lines[0].parse().unwrap();
-    let mut increment_count = 0;
-    for line in lines {
-        if !line.is_empty() {
-            let current: u64 = line.parse().unwrap();
-            if current > previous_value {
-                increment_count = increment_count + 1;
-            }
-            previous_value = current;
-        }
-    }
-    println!("First solution: {}", increment_count);
+    let numbers = read_file();
+    let first_solution = first_solution(&numbers);
+    let second_solution = second_solution(&numbers);
+    assert_eq!(first_solution, 1462);
+    assert_eq!(second_solution, 1497);
+    println!("First solution: {}", first_solution);
+    println!("Second solution: {}", second_solution);
 }
